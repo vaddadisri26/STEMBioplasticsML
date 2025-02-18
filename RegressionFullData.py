@@ -13,15 +13,6 @@ X = bioData[['Amylose', 'Glycerol']]
 y = bioData['TensileStrength']  
    
 numOfIterations = 250  
-   
-rsquaredLinear = 0  
-rmseLinear = 0  
-rsquaredPolynomial = 0  
-rmsePolynomial = 0  
-rsquaredSVR = 0  
-rmseSVR = 0  
-rsquaredPLS = 0  
-rmsePLS = 0  
 
 linearListRSquared = []
 polynomialListRSquared = []
@@ -39,8 +30,8 @@ for randomStateValue in range (numOfIterations):
   linearReg = linear_model.LinearRegression()     
   linearReg.fit(X_train, y_train)  
   y_pred_Linear = linearReg.predict(X_test)  
-  rsquaredLinear += linearReg.score(X_test, y_test) / numOfIterations
-  rmseLinear += math.sqrt(mean_squared_error(y_test, y_pred_Linear)) / numOfIterations
+  linearListRSquared.append(linearReg.score(X_test, y_test))
+  linearListRMSE.append(math.sqrt(mean_squared_error(y_test, y_pred_Linear)))
    
   polynomialReg = PolynomialFeatures(degree=2)     
   X_polynomial = polynomialReg.fit_transform(X_train)     
@@ -48,39 +39,67 @@ for randomStateValue in range (numOfIterations):
   otherLinearReg = linear_model.LinearRegression()     
   otherLinearReg.fit(X_polynomial, y_train)   
   y_pred_Polynomial = otherLinearReg.predict(polynomialReg.fit_transform(X_test))  
-  rsquaredPolynomial += otherLinearReg.score(polynomialReg.fit_transform(X_test), y_test) / numOfIterations
-  rmsePolynomial += math.sqrt(mean_squared_error(y_test, y_pred_Polynomial)) / numOfIterations
+  polynomialListRSquared.append(otherLinearReg.score(polynomialReg.fit_transform(X_test), y_test))
+  polynomialListRMSE.append(math.sqrt(mean_squared_error(y_test, y_pred_Polynomial)))
    
   supportVectorReg = SVR(kernel = 'rbf')   
   supportVectorReg.fit(X_train, y_train)  
   y_pred_SVR = supportVectorReg.predict(X_test)  
-  rsquaredSVR += supportVectorReg.score(X_test, y_test) / numOfIterations
-  rmseSVR += math.sqrt(mean_squared_error(y_test, y_pred_SVR)) / numOfIterations
+  svrListRSquared.append(supportVectorReg.score(X_test, y_test))
+  svrListRMSE.append(math.sqrt(mean_squared_error(y_test, y_pred_SVR)))
    
   n_components = 2  
   pls_model = PLSRegression(n_components = n_components)  
   pls_model.fit(X_train, y_train)  
    
   y_pred = pls_model.predict(X_test)  
-  rsquaredPLS += pls_model.score(X_test, y_test) / numOfIterations
-  rmsePLS += math.sqrt(mean_squared_error(y_test, y_pred)) / numOfIterations
-  
-print("Linear")  
-print(rsquaredLinear)  
-print(rmseLinear)  
-print("")  
-   
-print("Polynomial")  
-print(rsquaredPolynomial)  
-print(rmsePolynomial)  
-print("")  
-   
-print("SVR")  
-print(rsquaredSVR)  
-print(rmseSVR)  
-print("")  
-   
-print("PLS")  
-print(rsquaredPLS)  
-print(rmsePLS)  
-print("") 
+  plsListRSquared.append(pls_model.score(X_test, y_test))
+  plsListRMSE.append(math.sqrt(mean_squared_error(y_test, y_pred)))
+
+print("R Squared Linear: ")
+
+for i in range(len(linearListRSquared)):
+  print(linearListRSquared[i])
+print("")
+
+print("R Squared Polynomial: ")
+
+for i in range(len(polynomialListRSquared)):
+  print(polynomialListRSquared[i])
+print("")
+
+print("R Squared SVR: ")
+
+for i in range(len(svrListRSquared)):
+  print(svrListRSquared[i])
+print("")
+
+print("R Squared PLS: ")
+
+for i in range(len(plsListRSquared)):
+  print(plsListRSquared[i])
+print("")
+
+print("RMSE Linear: ")
+
+for i in range(len(linearListRMSE)):
+  print(linearListRMSE[i])
+print("")
+
+print("RMSE Polynomial: ")
+
+for i in range(len(polynomialListRMSE)):
+  print(polynomialListRMSE[i])
+print("")
+
+print("RMSE SVR: ")
+
+for i in range(len(svrListRMSE)):
+  print(svrListRMSE[i])
+print("")
+
+print("RMSE PLS: ")
+
+for i in range(len(plsListRMSE)):
+  print(plsListRMSE[i])
+print("")
