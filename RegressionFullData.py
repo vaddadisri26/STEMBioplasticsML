@@ -6,7 +6,9 @@ from sklearn.cross_decomposition import PLSRegression
 from sklearn.model_selection import train_test_split  
 from sklearn.metrics import mean_squared_error
 import random  
-import math  
+import math
+import scipy.stats 
+import numpy as np
       
 bioData = pandas.read_csv("data.csv")  
 X = bioData[['Amylose', 'Glycerol']]     
@@ -56,50 +58,32 @@ for randomStateValue in range (numOfIterations):
   plsListRSquared.append(pls_model.score(X_test, y_test))
   plsListRMSE.append(math.sqrt(mean_squared_error(y_test, y_pred)))
 
-print("R Squared Linear: ")
-
-for i in range(len(linearListRSquared)):
-  print(linearListRSquared[i])
+tPolynomialLinearRsquared, pPolynomialLinearRsquared = scipy.stats.ttest_ind(a = polynomialListRSquared, b = linearListRSquared, equal_var = False)
+print("PolynomialLinearRSquared T-stat:", tPolynomialLinearRsquared)
+print("PolynomialLinearRSquared P-value:", pPolynomialLinearRsquared)
 print("")
 
-print("R Squared Polynomial: ")
-
-for i in range(len(polynomialListRSquared)):
-  print(polynomialListRSquared[i])
+tPolynomialSVRRsquared, pPolynomialSVRRsquared = scipy.stats.ttest_ind(a = polynomialListRSquared, b = svrListRSquared, equal_var = False)
+print("PolynomialSVRRSquared T-stat:", tPolynomialSVRRsquared)
+print("PolynomialSVRRSquared P-value:", pPolynomialSVRRsquared)
 print("")
 
-print("R Squared SVR: ")
-
-for i in range(len(svrListRSquared)):
-  print(svrListRSquared[i])
+tPolynomialPLSRsquared, pPolynomialPLSRsquared = scipy.stats.ttest_ind(a = polynomialListRSquared, b = plsListRSquared, equal_var = False)
+print("PolynomialPLSRsquared T-stat:", tPolynomialPLSRsquared)
+print("PolynomialPLSRsquared P-value:", pPolynomialPLSRsquared)
 print("")
 
-print("R Squared PLS: ")
-
-for i in range(len(plsListRSquared)):
-  print(plsListRSquared[i])
+tPolynomialLinearRMSE, pPolynomialLinearRMSE = scipy.stats.ttest_ind(a = polynomialListRMSE, b = linearListRMSE, equal_var = False)
+print("PolynomialLinearRMSE T-stat:", tPolynomialLinearRMSE)
+print("PolynomialLinearRMSE P-value:", pPolynomialLinearRMSE)
 print("")
 
-print("RMSE Linear: ")
-
-for i in range(len(linearListRMSE)):
-  print(linearListRMSE[i])
+tPolynomialSVRRMSE, pPolynomialSVRRMSE = scipy.stats.ttest_ind(a = polynomialListRMSE, b = svrListRMSE, equal_var = False)
+print("PolynomialSVRRMSE T-stat:", tPolynomialSVRRMSE)
+print("PolynomialSVRRMSE P-value:", pPolynomialSVRRMSE)
 print("")
 
-print("RMSE Polynomial: ")
-
-for i in range(len(polynomialListRMSE)):
-  print(polynomialListRMSE[i])
-print("")
-
-print("RMSE SVR: ")
-
-for i in range(len(svrListRMSE)):
-  print(svrListRMSE[i])
-print("")
-
-print("RMSE PLS: ")
-
-for i in range(len(plsListRMSE)):
-  print(plsListRMSE[i])
+tPolynomialPLSRMSE, pPolynomialPLSRMSE = scipy.stats.ttest_ind(a = polynomialListRMSE, b = plsListRMSE, equal_var = False)
+print("PolynomialPLSRMSE T-stat:", tPolynomialPLSRMSE)
+print("PolynomialPLSRMSE P-value:", pPolynomialPLSRMSE)
 print("")
